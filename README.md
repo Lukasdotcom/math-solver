@@ -8,7 +8,7 @@ npm i math-solver
 
 # Example
 
-To use this all you do is have this code and change the string in the function to whatever you want to solve. Note that currently only the basic operators are supported.
+To use this all you do is have this code and change the string in the function to whatever you want to solve. Note that currently only the basic operators are supported. The simpleMath function then returns an array of steps in the key steps and returns the answer under the key answer.
 
 ```js
 import { simpleMath } from "@lukasdotcom/math-solver";

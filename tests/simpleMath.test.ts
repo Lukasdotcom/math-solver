@@ -15,6 +15,9 @@ test("double negative or just negative but more -3+-2--4 is equal to -1", () => 
 test("decimals 3.2+1.4 to equal 4.6", () => {
   expect(simpleMath("3.2+1.4").answer).toBe(4.6);
 });
-test("super crazy 4*(-2+1)^2-13/2+1.2 to equal 1", () => {
-  expect(simpleMath("4*(-2+1)^2-13/2+1.2").answer).toBe(-1.3);
+test("factorial 2!+3 to equal 5", () => {
+  expect(simpleMath("2!+3").answer).toBe(5);
+});
+test("super crazy 4*(-2+3!)^2-13/2+1.2 to equal 58.7", () => {
+  expect(simpleMath("4*(-2+3!)^2-13/2+1.2").answer).toBe(58.7);
 });
