@@ -1,8 +1,4 @@
-export const operations = [
-  ["^"],
-  ["*", "/"],
-  ["+", "-"],
-];
+export const operations = [["^"], ["*", "/"], ["+", "-"]];
 const operationsRegex = /\!|\^|\*|\/|\-|\+/;
 /**
  * Does addition, subtraction, multiplication, division, parenthesis, factorial, and exponents. All in the order of operations
@@ -52,7 +48,7 @@ export const simpleMath = (text: string): number => {
       });
       if (first > -1 && operation) {
         // Finds the start of the first number
-        let start = first-1;
+        let start = first - 1;
         // Goes through the number
         while (true) {
           if (start < 1) start = 0;
@@ -66,7 +62,7 @@ export const simpleMath = (text: string): number => {
         while (true) {
           if (start < 2) start = 0;
           if (start === 0) break;
-          if (text.substring(start - 2, start-1).search(/[0-9]|\./) > -1) {
+          if (text.substring(start - 2, start - 1).search(/[0-9]|\./) > -1) {
             break;
           }
           start -= 1;
@@ -134,7 +130,7 @@ const matchingParenthesis = (text: string, idx: number): number => {
   idx += 1;
   let depth = 0;
   while (idx >= 0 && idx < text.length) {
-    if (text.substring(idx, idx+1) === ")") {
+    if (text.substring(idx, idx + 1) === ")") {
       if (depth > 0) {
         depth -= 1;
       } else {
