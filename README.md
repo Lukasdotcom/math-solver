@@ -11,7 +11,15 @@ npm i math-solver
 To use this all you do is have this code and change the string in the function to whatever you want to solve. Note that currently only the basic operators are supported.
 
 ```js
-import { simpleMath } from "math-solver";
+import { simpleMath } from "@lukasdotcom/math-solver";
 
 simpleMath("1+1");
+```
+
+You can also use this syntax:
+
+```js
+const mathSolver = require("@lukasdotcom/math-solver");
+
+mathSolver.simpleMath("1+1");
 ```
