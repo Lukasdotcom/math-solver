@@ -1,11 +1,16 @@
 export const operations = [["^"], ["*", "/"], ["+", "-"]];
 const operationsRegex = /\!|\^|\*|\/|\-|\+/;
+interface result {
+  answer: number;
+  steps: string[];
+}
 /**
  * Does addition, subtraction, multiplication, division, parenthesis, factorial, and exponents. All in the order of operations
  * @param {string} text - The text you want the answer for ex: "1+1*(3^2+1)" is 11.
  * @returns {number} The result of the equation.
  */
-export const simpleMath = (text: string): number => {
+export const simpleMath = (text: string): result => {
+  let steps: string[] = [text];
   while (true) {
     // Finds the first parenthesis to check what the value of it is.
     const first = text.search("\\(");
@@ -13,7 +18,17 @@ export const simpleMath = (text: string): number => {
       // If a parenthesis exists the content is recursivly sent through this function to find the answer to it
       const close = matchingParenthesis(text, first);
       const result = simpleMath(text.substring(first + 1, close));
-      text = text.replace(text.substring(first, close + 1), String(result));
+      const newSteps = result.steps
+        .slice(1)
+        .map((e) => text.replace(text.substring(first + 1, close), String(e)));
+      if (newSteps.length > 0) {
+        steps = [...steps, ...newSteps];
+      }
+      text = text.replace(
+        text.substring(first, close + 1),
+        String(result.answer)
+      );
+      steps.push(text);
     } else {
       break;
     }
@@ -113,12 +128,17 @@ export const simpleMath = (text: string): number => {
           throw "Calculation failed";
         }
         text = text.replace(text.substring(start, end), String(result));
+        steps.push(text);
       } else {
         break;
       }
     }
   });
-  return _parseFloat(text);
+  console.log(steps);
+  return {
+    answer: _parseFloat(text),
+    steps,
+  };
 };
 /**
  * Used to find the matching closing parenthesis to the opening parenthesis at the index given
