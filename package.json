@@ -1,5 +1,5 @@
 {
-  "name": "math-solver",
+  "name": "math-solve",
   "version": "0.1.0",
   "description": "Tries to solve any math problem",
   "main": "dist/index.js",
