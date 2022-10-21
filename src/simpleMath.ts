@@ -13,6 +13,9 @@ interface simpleSolution {
  */
 export const simpleMath = (text: string): simpleSolution => {
   let steps: string[] = [text];
+  // Replaces every constant with their number value
+  text = text.replace(/\π/g, String(Math.PI));
+  text = text.replace(/e/g, String(Math.E));
   while (true) {
     // Finds the first parenthesis to check what the value of it is.
     const first = text.search("\\(");

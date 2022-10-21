@@ -21,3 +21,9 @@ test("factorial 2!+3 to equal 5", () => {
 test("super crazy 4*(-2+3!)^2-13/2+1.2 to equal 58.7", () => {
   expect(simpleMath("4*(-2+3!)^2-13/2+1.2").answer).toBe(58.7);
 });
+test("Tests π+π", () => {
+  expect(simpleMath("π+π").answer).toBe(6.283185307179586);
+});
+test("Tests e+e", () => {
+  expect(simpleMath("e+e").answer).toBe(5.43656365691809);
+});
