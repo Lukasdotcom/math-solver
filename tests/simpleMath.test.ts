@@ -33,3 +33,6 @@ test("tests functions", () => {
 test("Tests the automatic degree switching e+e", () => {
   expect(simpleMath("cos(180)").answer).toBe(-1);
 });
+test("Tests if the logarithms work", () => {
+  expect(simpleMath("ln(e)+log(10)").answer).toBe(2);
+});

@@ -1,8 +1,7 @@
-import { _parseFloat } from ".";
-import { factorial } from "./operations";
+import { _parseFloat, factorial, log } from ".";
 const operations = [["^"], ["*", "/"], ["+", "-"]];
 const operationsRegex = /\!|\^|\*|\/|\-|\+/;
-const functions = ["sin", "cos", "tan"];
+const functions = ["sin", "cos", "tan", "log", "ln"];
 interface Dictionary<T> {
   [Key: string]: T;
 }
@@ -46,13 +45,29 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
       steps: [...answer.steps, String(result)],
     };
   },
+  log: (equation: string): simpleSolution => {
+    const answer = simpleMath(equation);
+    const result = log(answer.answer, 10);
+    return {
+      answer: result,
+      steps: [...answer.steps, String(result)],
+    };
+  },
+  ln: (equation: string): simpleSolution => {
+    const answer = simpleMath(equation);
+    const result = log(answer.answer, Math.E);
+    return {
+      answer: result,
+      steps: [...answer.steps, String(result)],
+    };
+  },
 };
 interface simpleSolution {
   answer: number;
   steps: string[];
 }
 /**
- * Does addition, subtraction, multiplication, division, parenthesis, factorial, and exponents. All in the order of operations. It also supports trig functions.
+ * Does addition, subtraction, multiplication, division, parenthesis, factorial, and exponents. All in the order of operations. It also supports trig functions and logs.
  * @param {string} text - The text you want the answer for ex: "1+1*(3^2+1)" is 11.
  * @returns {simpleSolution} The result of the equation. Steps is an array of steps and answer is the solution to the equation
  */

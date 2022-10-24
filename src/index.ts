@@ -1,5 +1,6 @@
 export { simpleMath } from "./simpleMath";
-export { factorial } from "./operations";
+export { factorial } from "./operations/factorial";
+export { log } from "./operations/log";
 /**
  * Is like the actual parseFloat(turning string to number) but allows for unlimited \- signs before the number.
  * @param {string} num - The float as a string.

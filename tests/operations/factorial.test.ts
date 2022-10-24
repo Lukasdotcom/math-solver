@@ -1,4 +1,4 @@
-import { factorial } from "../src/index";
+import { factorial } from "../../src/index";
 
 // Just tests factorial
 test("factorial of 0 is 1", () => {
