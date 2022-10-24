@@ -27,3 +27,9 @@ test("Tests π+π", () => {
 test("Tests e+e", () => {
   expect(simpleMath("e+e").answer).toBe(5.43656365691809);
 });
+test("tests functions", () => {
+  expect(simpleMath("cos(π)").answer).toBe(-1);
+});
+test("Tests the automatic degree switching e+e", () => {
+  expect(simpleMath("cos(180)").answer).toBe(-1);
+});
