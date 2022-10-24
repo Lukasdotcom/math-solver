@@ -1,13 +1,58 @@
 import { _parseFloat } from ".";
 import { factorial } from "./operations";
 const operations = [["^"], ["*", "/"], ["+", "-"]];
-const operationsRegex = /\^|\*|\/|\-|\+/;
+const operationsRegex = /\!|\^|\*|\/|\-|\+/;
+const functions = ["sin", "cos", "tan"];
+interface Dictionary<T> {
+  [Key: string]: T;
+}
+const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
+  sin: (equation: string): simpleSolution => {
+    const answer = simpleMath(equation);
+    // Checks if the automatic switching to degrees should happen
+    const actualAnswer =
+      Math.abs(answer.answer) < 7
+        ? answer.answer
+        : (answer.answer / 180) * Math.PI;
+    const result = Math.sin(actualAnswer);
+    return {
+      answer: result,
+      steps: [...answer.steps, String(result)],
+    };
+  },
+  cos: (equation: string): simpleSolution => {
+    const answer = simpleMath(equation);
+    // Checks if the automatic switching to degrees should happen
+    const actualAnswer =
+      Math.abs(answer.answer) < 7
+        ? answer.answer
+        : (answer.answer / 180) * Math.PI;
+    const result = Math.cos(actualAnswer);
+    return {
+      answer: result,
+      steps: [...answer.steps, String(result)],
+    };
+  },
+  tan: (equation: string): simpleSolution => {
+    const answer = simpleMath(equation);
+    // Checks if the automatic switching to degrees should happen
+    const actualAnswer =
+      Math.abs(answer.answer) < 7
+        ? answer.answer
+        : (answer.answer / 180) * Math.PI;
+    const result = Math.tan(actualAnswer);
+    return {
+      answer: result,
+      steps: [...answer.steps, String(result)],
+    };
+  },
+};
 interface simpleSolution {
   answer: number;
   steps: string[];
 }
 /**
- * Does addition, subtraction, multiplication, division, parenthesis, factorial, and exponents. All in the order of operations
+ * Does addition, subtraction, multiplication, division, parenthesis, factorial, and exponents. All in the order of operations. It also supports trig functions.
  * @param {string} text - The text you want the answer for ex: "1+1*(3^2+1)" is 11.
  * @returns {simpleSolution} The result of the equation. Steps is an array of steps and answer is the solution to the equation
  */
@@ -20,9 +65,31 @@ export const simpleMath = (text: string): simpleSolution => {
     // Finds the first parenthesis to check what the value of it is.
     const first = text.search("\\(");
     if (first > 0) {
+      // Finds if there is any special function
+      let func = "";
+      let idx = first - 1;
+      while (true) {
+        const char = text.substring(idx, idx + 1);
+        if (char.search(/[a-zA-Z]/) > -1) {
+          func = char + func;
+        } else {
+          break;
+        }
+        idx -= 1;
+      }
       // If a parenthesis exists the content is recursivly sent through this function to find the answer to it
       const close = matchingParenthesis(text, first);
-      const result = simpleMath(text.substring(first + 1, close));
+      let result: simpleSolution = { steps: [], answer: 2 };
+      // Checks if there was a function for this
+      if (func === "") {
+        result = simpleMath(text.substring(first + 1, close));
+      } else {
+        if (functionToCall[func]) {
+          result = functionToCall[func](text.substring(first + 1, close));
+        } else {
+          throw `Could not find function ${func}`;
+        }
+      }
       const newSteps = result.steps
         .slice(1)
         .map((e) => text.replace(text.substring(first + 1, close), String(e)));
@@ -30,7 +97,7 @@ export const simpleMath = (text: string): simpleSolution => {
         steps = [...steps, ...newSteps];
       }
       text = text.replace(
-        text.substring(first, close + 1),
+        func + text.substring(first, close + 1),
         String(result.answer)
       );
       steps.push(text);
@@ -38,6 +105,9 @@ export const simpleMath = (text: string): simpleSolution => {
       break;
     }
   }
+  // Replaces every constant with their number value
+  text = text.replace(/\π/g, String(Math.PI));
+  text = text.replace(/e/g, String(Math.E));
   // Finds factorials
   while (true) {
     const location = text.search("!");
