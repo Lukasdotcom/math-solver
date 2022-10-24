@@ -18,7 +18,7 @@ test("decimals 3.2+1.4 to equal 4.6", () => {
 test("factorial 2!+3 to equal 5", () => {
   expect(simpleMath("2!+3").answer).toBe(5);
 });
-test("super crazy 4*(-2+3!)^2-13/2+1.2 to equal 58.7", () => {
+test("super crazy 4*(-2+3!)^2-13/2+1.2+log(5*3-3!+1) to equal 59.7", () => {
   expect(simpleMath("4*(-2+3!)^2-13/2+1.2+log(5*3-3!+1)").answer).toBe(59.7);
 });
 test("Tests π+π", () => {
