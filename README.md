@@ -3,7 +3,7 @@
 Tries to solve any math problem. Currently all it does is the classic operators and adds them together while following order of operations. To install just run the command below:
 
 ```bash
-npm i math-solver
+npm i @lukasdotcom/math-solve
 ```
 
 # Example
