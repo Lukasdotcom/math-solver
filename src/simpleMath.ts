@@ -1,7 +1,7 @@
 import { _parseFloat, factorial, log } from ".";
 const operations = [["^"], ["*", "/"], ["+", "-"]];
 const operationsRegex = /\!|\^|\*|\/|\-|\+/;
-const functions = ["sin", "cos", "tan", "log", "ln"];
+const operationsRegexParenth = /\!|\^|\*|\/|\-|\+|\(|\)/;
 interface Dictionary<T> {
   [Key: string]: T;
 }
@@ -16,7 +16,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
     const result = Math.sin(actualAnswer);
     return {
       answer: result,
-      steps: [...answer.steps, String(result)],
+      steps: [...answer.steps],
     };
   },
   cos: (equation: string): simpleSolution => {
@@ -29,7 +29,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
     const result = Math.cos(actualAnswer);
     return {
       answer: result,
-      steps: [...answer.steps, String(result)],
+      steps: [...answer.steps],
     };
   },
   tan: (equation: string): simpleSolution => {
@@ -42,7 +42,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
     const result = Math.tan(actualAnswer);
     return {
       answer: result,
-      steps: [...answer.steps, String(result)],
+      steps: [...answer.steps],
     };
   },
   log: (equation: string): simpleSolution => {
@@ -50,7 +50,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
     const result = log(answer.answer, 10);
     return {
       answer: result,
-      steps: [...answer.steps, String(result)],
+      steps: [...answer.steps],
     };
   },
   ln: (equation: string): simpleSolution => {
@@ -58,7 +58,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
     const result = log(answer.answer, Math.E);
     return {
       answer: result,
-      steps: [...answer.steps, String(result)],
+      steps: [...answer.steps],
     };
   },
 };
@@ -74,8 +74,34 @@ interface simpleSolution {
 export const simpleMath = (text: string): simpleSolution => {
   let steps: string[] = [text];
   // Replaces every constant with their number value
-  text = text.replace(/\π/g, String(Math.PI));
-  text = text.replace(/e/g, String(Math.E));
+  const constants: Dictionary<number> = {
+    π: Math.PI,
+    e: Math.E,
+  };
+  while (true) {
+    const idx = text.search(/\π|e/);
+    let start = "";
+    let end = "";
+    if (idx < 0) break;
+    if (
+      idx > 0 &&
+      text.substring(idx - 1, idx).search(operationsRegexParenth) !== 0
+    ) {
+      start = "*";
+    }
+    if (
+      idx < text.length - 1 &&
+      text.substring(idx + 1, idx + 2).search(operationsRegexParenth) !== 0
+    ) {
+      end = "*";
+    }
+    text =
+      text.substring(0, idx) +
+      start +
+      constants[text.substring(idx, idx + 1)] +
+      end +
+      text.substring(idx + 1);
+  }
   while (true) {
     // Finds the first parenthesis to check what the value of it is.
     const first = text.search("\\(");
@@ -111,8 +137,33 @@ export const simpleMath = (text: string): simpleSolution => {
       if (newSteps.length > 0) {
         steps = [...steps, ...newSteps];
       }
+      // Adds multiplication symbol if the
+      let actualFirst = first;
+      let actualClose = close;
+      if (
+        idx >= 0 &&
+        text.substring(idx, idx + 1).search(operationsRegex) !== 0
+      ) {
+        text =
+          text.substring(0, idx + 1) +
+          "*" +
+          text.substring(idx + 1, text.length);
+        actualFirst++;
+        actualClose++;
+      }
+      if (
+        actualClose < text.length - 1 &&
+        text
+          .substring(actualClose + 1, actualClose + 2)
+          .search(operationsRegex) !== 0
+      ) {
+        text =
+          text.substring(0, actualClose + 1) +
+          "*" +
+          text.substring(actualClose + 1, text.length);
+      }
       text = text.replace(
-        func + text.substring(first, close + 1),
+        func + text.substring(actualFirst, actualClose + 1),
         String(result.answer)
       );
       steps.push(text);

@@ -36,3 +36,6 @@ test("Tests the automatic degree switching e+e", () => {
 test("Tests if the logarithms work", () => {
   expect(simpleMath("ln(e)+log(10)").answer).toBe(2);
 });
+test("Tests if the parenthesis stuff works", () => {
+  expect(simpleMath("5ln(e)+2(3*2)(2+2)5").answer).toBe(245);
+});
