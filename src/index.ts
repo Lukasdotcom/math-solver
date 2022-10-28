@@ -16,7 +16,11 @@ export const _parseFloat = (num: string): number => {
     );
   }
 };
-export interface simpleSolution {
+export interface simpleSolutionNumber {
   answer: number;
+  steps: string[];
+}
+export interface simpleSolutionString {
+  answer: string;
   steps: string[];
 }
