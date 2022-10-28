@@ -1,12 +1,13 @@
 import { _parseFloat, factorial, log } from ".";
+import { simpleSolutionNumber } from ".";
 const operations = [["^"], ["*", "/"], ["+", "-"]];
 const operationsRegex = /\!|\^|\*|\/|\-|\+/;
 const operationsRegexParenth = /\!|\^|\*|\/|\-|\+|\(|\)/;
 interface Dictionary<T> {
   [Key: string]: T;
 }
-const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
-  sin: (equation: string): simpleSolution => {
+const functionToCall: Dictionary<(equation: string) => simpleSolutionNumber> = {
+  sin: (equation: string): simpleSolutionNumber => {
     const answer = simpleMath(equation);
     // Checks if the automatic switching to degrees should happen
     const actualAnswer =
@@ -19,7 +20,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
       steps: [...answer.steps],
     };
   },
-  cos: (equation: string): simpleSolution => {
+  cos: (equation: string): simpleSolutionNumber => {
     const answer = simpleMath(equation);
     // Checks if the automatic switching to degrees should happen
     const actualAnswer =
@@ -32,7 +33,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
       steps: [...answer.steps],
     };
   },
-  tan: (equation: string): simpleSolution => {
+  tan: (equation: string): simpleSolutionNumber => {
     const answer = simpleMath(equation);
     // Checks if the automatic switching to degrees should happen
     const actualAnswer =
@@ -45,7 +46,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
       steps: [...answer.steps],
     };
   },
-  log: (equation: string): simpleSolution => {
+  log: (equation: string): simpleSolutionNumber => {
     const answer = simpleMath(equation);
     const result = log(answer.answer, 10);
     return {
@@ -53,7 +54,7 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
       steps: [...answer.steps],
     };
   },
-  ln: (equation: string): simpleSolution => {
+  ln: (equation: string): simpleSolutionNumber => {
     const answer = simpleMath(equation);
     const result = log(answer.answer, Math.E);
     return {
@@ -62,16 +63,12 @@ const functionToCall: Dictionary<(equation: string) => simpleSolution> = {
     };
   },
 };
-interface simpleSolution {
-  answer: number;
-  steps: string[];
-}
 /**
  * Does addition, subtraction, multiplication, division, parenthesis, factorial, and exponents. All in the order of operations. It also supports trig functions and logs.
  * @param {string} text - The text you want the answer for ex: "1+1*(3^2+1)" is 11.
- * @returns {simpleSolution} The result of the equation. Steps is an array of steps and answer is the solution to the equation
+ * @returns {simpleSolutionNumber} The result of the equation. Steps is an array of steps and answer is the solution to the equation
  */
-export const simpleMath = (text: string): simpleSolution => {
+export const simpleMath = (text: string): simpleSolutionNumber => {
   let steps: string[] = [text];
   // Replaces every constant with their number value
   const constants: Dictionary<number> = {
@@ -120,7 +117,7 @@ export const simpleMath = (text: string): simpleSolution => {
       }
       // If a parenthesis exists the content is recursivly sent through this function to find the answer to it
       const close = matchingParenthesis(text, first);
-      let result: simpleSolution = { steps: [], answer: 2 };
+      let result: simpleSolutionNumber = { steps: [], answer: 2 };
       // Checks if there was a function for this
       if (func === "") {
         result = simpleMath(text.substring(first + 1, close));
